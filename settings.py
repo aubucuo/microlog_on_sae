@@ -16,7 +16,7 @@ settings = {
     "cookie_secret": "11oETzKXQAGaYdkL5gEm123saz68945$6P1o/Vo=",
     "login_url": "/auth/login",
     "autoescape": None,
-    "debug": False,
+    "debug": True,
 }
 
 #数据库设置

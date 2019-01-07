@@ -11,47 +11,45 @@ import tornado.database
 from settings import db, NAVNUM
 from libs import markdown
 from tornado.escape import xhtml_escape
-from libs.utils import hexuserpass, checkuserpass
 import sae.kvdb
 
 md = markdown.Markdown(safe_mode=True)
 
-
+sae.kvdb.Client().add('count_post_total',0)#post计数
 class BaseHandler(tornado.web.RequestHandler):
-    #数据库
+
     @property
-    def db(self):
-        blogdb = tornado.database.Connection(
-            host=db["host"] + ":" + db["port"], database=db["db"],
-            user=db["user"], password=db["password"])
-        return blogdb
-	def kvdb(self):
-		return sae.kvdb.Client()
-		
-    def get_current_user(self):
+    def kv(self):
+        return sae.kvdb.Client()
+
+    @property
+    def login_stas(self):
         user_id = self.get_secure_cookie("user")
         if not user_id:
             return None
-        return self.db.get("SELECT * FROM users WHERE id = %s", int(user_id))
+        return True
 
 
 class HomeHandler(BaseHandler):
     
     def get(self):
-	    #查询前8个
-        entries = self.db.query("SELECT * FROM entries ORDER BY published "
-                                "DESC LIMIT 8")
+        #查询最新8个
+        marker=self.kv.get('count_post_total')
+        entries = self.kv.get_by_prefix('post_',limit=8, marker=marker-8 if marker>8 else 0)
         if not entries:
             self.redirect("/newcode")
             return
+            '''
         results = self.db.query("SELECT COUNT(*) As code FROM entries") #results = {'code': 1L}
         count = results[0].code
         pages = (count - 1) / NAVNUM + 1
-        self.render("home.html", entries=entries, pages=pages, counts=count)
+        '''
+        pages=marker/8
+        self.render("home.html", entries=entries, pages=pages, counts=marker)
 
 
 class PageHandler(BaseHandler):
-
+    pass
     def get(self, id):
         results = self.db.query("SELECT COUNT(*) As code FROM entries")
         count = results[0].code
@@ -66,15 +64,15 @@ class PageHandler(BaseHandler):
 
 class EntryHandler(BaseHandler):
     
-    def get(self, slug):
-        entry = self.db.get("SELECT * FROM entries WHERE slug = %s", slug)
+    def get(self, codeid):
+        entry = self.kv.get('post_%s'%str(codeid))
         if not entry:
             raise tornado.web.HTTPError(404)
         self.render("entry.html", entry=entry)
 
 
 class FeedHandler(BaseHandler):
-    
+    pass
     def get(self):
         entries = self.db.query("SELECT * FROM entries ORDER BY published "
                                 "DESC LIMIT 10")
@@ -83,53 +81,41 @@ class FeedHandler(BaseHandler):
 
 #/newcode
 class ComposeHandler(BaseHandler):
-    # id title content time 
+    
     def get(self):
         self.render("compose.html")
-
+    # id title content time 
     def post(self):
-        #id = self.get_argument("id", None)
+        count=self.kv.get('count_post_total')+1
+        self.kv.replace('count_post_total',count)
         title = xhtml_escape(self.get_argument("title"))
-        code = xhtml_escape(self.get_argument("code"))
-        tep = self.get_argument("info")
-        pswd = self.get_argument("password")
+        #code = xhtml_escape(self.get_argument("code"))
+        info = md.convert(self.get_argument("info"))
 
-        # 添加了一个丑陋的验证机制，预防无脑的机器发布垃圾信息
         check = self.get_argument("check", None)
         if check != "1984":
             self.redirect("/newcode")
             return
+            
+        self.kv.add('post_%d'%count,[count,title,info,datetime.datetime.now()])
 
-        info = md.convert(tep)
-        password = hexuserpass(pswd)
-        slug = "zzzzzzzz"  # 丑陋的一笔
-        self.db.execute("""
-            INSERT INTO entries (password,title,slug,code,info,markdown,
-            published) VALUES (%s,%s,%s,%s,%s,%s,%s)
-            """, password, title, slug, code, info, tep, datetime.datetime.now())
-        e = self.db.get("SELECT * FROM entries WHERE slug = %s", slug)
-        eid = e.id
-        slug = eid
-        self.db.execute("UPDATE entries SET slug = %s WHERE id = %s", slug, int(eid))
-        self.redirect("/" + str(slug))
+        self.redirect("/%d"%count)
 
 
 class DeleteHandler(BaseHandler):
 
     def post(self):
-        password = self.get_argument("password")
-        id = self.get_argument("id")
-        e = self.db.get("SELECT * FROM entries WHERE id = %s", int(id))
-        
-        if checkuserpass(password, e["password"]):
-            self.db.execute("DELETE FROM entries WHERE id=%s", int(id))
+        if self.login_stas:
+            #password = self.get_argument("password")
+            num = self.get_argument("id")
+            self.kv.delete('post_%s'%num)
             self.redirect("/")
         else:
-            self.redirect("/" + str(id))
-
+            self.redirect("/%s"%num)
+            
 
 class UserLoginHandler(BaseHandler):
-    
+    #缺少get
     def post(self):
         password = self.get_argument("password")
         id = self.get_argument("id")
@@ -140,34 +126,34 @@ class UserLoginHandler(BaseHandler):
         else:
             self.redirect("/" + str(id))
     
-    
+#未保存markdown之前的内容，只提供除info之外   
 class UpdateHandler(BaseHandler):
     
     def get(self, codeid):
-        id = self.get_secure_cookie("codeid")
-        if str(codeid) == str(id):
-            code = self.db.get("SELECT * FROM entries WHERE id = %s", int(id))
+        cookie_codeid = self.get_secure_cookie("codeid")
+        #逻辑有点问题
+        if str(codeid) == cookie_codeid:
+            code = self.kv.get('post_%s'%cookie_codeid)
             self.render("update.html", code=code)
         else:
-            self.redirect("/" + str(codeid))
+            self.redirect("/%s"%cookie_codeid)
             
     def post(self, codeid):
         title = xhtml_escape(self.get_argument("title"))
-        tep = self.get_argument("info")
-        code = xhtml_escape(self.get_argument("code"))
-        pswd = self.get_argument("password")
-        info = md.convert(tep)
-        codes = self.db.get("SELECT * FROM entries WHERE id = %s", int(codeid))
-        if checkuserpass(pswd, codes["password"]):
-            self.db.execute("""
-                UPDATE entries SET title = %s, info = %s, code = %s, markdown = %s
-                WHERE id = %s""", title, info, code, tep,  int(codeid))
-            self.clear_cookie("codeid")
-            self.redirect("/" + str(codeid))
-        else:
-            self.redirect("/" + str(codeid))
+        #code = xhtml_escape(self.get_argument("code"))
+        info = md.convert(self.get_argument("info"))
+        #鉴权太弱
+        check = self.get_argument("check", None)
+        if check != "1984":
+            self.redirect("/newcode")
+            return
+            
+        self.kv.replace('post_%d'%codeid,[codeid,title,info,datetime.datetime.now()])
+
+        self.redirect("/%d"%codeid)
 
 class debug(BaseHandler):
+    pass
     def get(self,):
         results = self.db.query("SELECT COUNT(*) As code FROM entries")
         count = results[0].code
