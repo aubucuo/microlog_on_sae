@@ -29,6 +29,9 @@ class BaseHandler(tornado.web.RequestHandler):
             return None
         return True
 
+    def get_current_user(self):
+        user_email = self.get_secure_cookie("user")
+        return user_email
 
 class HomeHandler(BaseHandler):
     
@@ -48,7 +51,7 @@ class HomeHandler(BaseHandler):
             return 
 
         pages=count_post_total/8+1
-        self.render("home.html", entries=postlist, pages=pages, counts=count_post_total)
+        self.render("home.html", entries=postlist[::-1], pages=pages, counts=count_post_total)
 
 
 class PageHandler(BaseHandler):
@@ -84,7 +87,7 @@ class FeedHandler(BaseHandler):
 
 #/newcode
 class ComposeHandler(BaseHandler):
-    
+    @tornado.web.authenticated
     def get(self):
         self.render("compose.html")
     # id title content time 
@@ -107,6 +110,7 @@ class DeleteHandler(BaseHandler):
             #password = self.get_argument("password")
             num = self.get_argument("id")
             self.kv.delete('post_%s'%num)
+            self.kv.replace('count_post_total',self.kv.get('count_post_total')-1)
             self.redirect("/")
         else:
             self.redirect("/%s"%num)
@@ -151,10 +155,6 @@ class UpdateHandler(BaseHandler):
         self.redirect("/%d"%codeid)
 
 class debug(BaseHandler):
-    pass
     def get(self,):
-        results = self.db.query("SELECT COUNT(*) As code FROM entries")
-        count = results[0].code
-        self.write(str([results,count]))
-
-        
+        results = self.current_user
+        self.write(str(results))
