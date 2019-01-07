@@ -34,18 +34,21 @@ class HomeHandler(BaseHandler):
     
     def get(self):
         #查询最新8个
-        marker=self.kv.get('count_post_total')
-        entries = self.kv.get_by_prefix('post_',limit=8, marker=marker-8 if marker>8 else 0)
+        count_post_total=self.kv.get('count_post_total')
+        entries = self.kv.get_by_prefix('post_',limit=8, marker=count_post_total-8 if count_post_total>8 else 0)
+        #entries= generate ('post_1', [1, u'1', u'1\n', datetime.datetime(2019, 1, 7, 15, 57, 35, 880823)])
+        postlist = []
+        while 1:
+            try :
+                postlist.append(next(entries)[1])
+            except:
+                break
         if not entries:
             self.redirect("/newcode")
-            return
-            '''
-        results = self.db.query("SELECT COUNT(*) As code FROM entries") #results = {'code': 1L}
-        count = results[0].code
-        pages = (count - 1) / NAVNUM + 1
-        '''
-        pages=marker/8
-        self.render("home.html", entries=entries, pages=pages, counts=marker)
+            return 
+
+        pages=count_post_total/8+1
+        self.render("home.html", entries=postlist, pages=pages, counts=count_post_total)
 
 
 class PageHandler(BaseHandler):
