@@ -94,11 +94,6 @@ class ComposeHandler(BaseHandler):
         title = xhtml_escape(self.get_argument("title"))
         #code = xhtml_escape(self.get_argument("code"))
         info = md.convert(self.get_argument("info"))
-
-        check = self.get_argument("check", None)
-        if check != "1984":
-            self.redirect("/newcode")
-            return
             
         self.kv.add('post_%d'%count,[count,title,info,datetime.datetime.now()])
 

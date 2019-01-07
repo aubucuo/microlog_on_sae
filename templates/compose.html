@@ -3,47 +3,24 @@
 {% block body %}
   <form action="{{ request.path }}" method="post" class="compose">
   <fieldset>
-  <legend>发布分享代码</legend>
+  <legend>发布文章</legend>
           <div class="clearfix">
-            <label for="xlInput3">代码标题</label>
+            <label for="xlInput3">标题</label>
             <div class="input">
               <input name="title" type="text" id="title" class="span7" />
             </div>
           </div><!-- /clearfix -->
+
           <div class="clearfix">
-            <label for="xlInput3">贴入代码</label>
-            <div class="input">
-              <textarea name="code" class="xxlarge span10" id="textarea3" name="textarea2" rows="10"></textarea>
-              
-            </div>
-          </div><!-- /clearfix -->
-          <div class="clearfix">
-            <label for="xlInput3">一些说明</label>
+            <label for="xlInput3">内容</label>
             <div class="input">
               <textarea name="info" class="xxlarge span10" id="textarea2" name="textarea2" rows="20"></textarea>
               <span class="help-block">
-                支持Markdown语法，请参考：<a href="http://daringfireball.net/projects/markdown/basics" target=_blank>#</a>
+                支持Markdown语法，参考：<a href="http://daringfireball.net/projects/markdown/basics" target=_blank>#</a>
               </span>
             </div>
           </div><!-- /clearfix -->
-          <div class="clearfix">
-            <label for="xlInput3">管理密码</label>
-            <div class="input">
-              <input name="password" type="password" class="span4" id="pswd" />
-              <span class="help-block">
-                在你修改和删除代码时有用。
-              </span>
-            </div>
-          </div><!-- /clearfix -->
-          <div class="clearfix">
-            <label for="xlInput3">验证码</label>
-            <div class="input">
-              <input name="check" type="password" class="span4" id="check" />
-              <span class="help-block">
-                最近垃圾信息泛滥，请输入 1984。
-              </span>
-            </div>
-          </div><!-- /clearfix -->
+
        <div class="actions">
             <input type="submit" class="btn primary" value="提交代码">&nbsp;
             <a href="/"><button type="reset" class="btn">放弃提交</button></a>

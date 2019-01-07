@@ -9,7 +9,7 @@ from libs.utils import hexpassword, checkpassword
 class SiteStartHandler(BaseHandler):
     
     def get(self):
-        admin = self.db.query("SELECT * FROM users ORDER BY id DESC LIMIT 1")
+        admin = self.kv.get('user_1')
         if not admin:
             self.render("start.html")
         else:
