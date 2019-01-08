@@ -50,7 +50,7 @@ class HomeHandler(BaseHandler):
             self.redirect("/newcode")
             return 
 
-        pages=count_post_total/8+1
+        pages=count_post_total/8 if pages!=0 else 1
         self.render("home.html", entries=postlist[::-1], pages=pages, counts=count_post_total)
 
 
