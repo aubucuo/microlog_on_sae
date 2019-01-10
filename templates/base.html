@@ -3,7 +3,7 @@
 
 <head>
 	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="description" content="A personal site for lifelog">
 	<title> {{ escape(handler.settings["sitename"]) }}</title>
 	<link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-" crossorigin="anonymous">	
@@ -26,17 +26,17 @@
 			</div>
 			<div class="pure-u-4-5">
         {% if tip %}
-        <button class="tip">{{ tip }}</button>
+        <aside class="tip">{{ tip }}</aside>
         {% end %}
         {% block body %}{% end %}
 			</div>
 		</div>
 	</div>
 
-	<div id="footer">
-		<p>&copy; {{ escape(handler.settings["sitename"]) }} 2019
+	<footer id="footer">
+    <hr>
+		<p>&copy; {{ escape(handler.settings["sitename"]) }} 2019</p>
 		{% block bottom %}{% end %}
-	</div>
+	</footer>
 </body>
-
 </html>

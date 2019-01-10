@@ -1,14 +1,14 @@
 {% extends "base.html" %}
-<title>{% block title %}发布代码——Code Share{% end %}</title>
+{% block title %}
+  <title>发布消息-escape(handler.settings["sitename"])</title>
+{% end %}
 {% block body %}
-<form action="{{ request.path }}" method="post" class="compose">
-	<fieldset>
+<form action="{{ request.path }}" method="post" class="pure-form">
+	<fieldset class='pure-group '>
 		<legend>发布新消息</legend>
-    <label for="title">标题</label>
-    <input id="email" type="email" placeholder="Email">
-    <label for="pswd">密码</label>
-    <input id="pswd" type="password" placeholder="Password">
-    <button type="submit" class="pure-button pure-button-primary">Sign in</button>
+    <input name="title" type="title">
+    <textarea name="content" type="text" rows="10" placeholder="支持markdown语法"></textarea>
+    <button type="submit" class="pure-button pure-button-primary">发布</button>
   {{ xsrf_form_html() }}
   </fieldset>
 </form>

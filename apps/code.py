@@ -95,8 +95,8 @@ class ComposeHandler(BaseHandler):
         msg_id = self.kv.get('count_post_total')+1
         self.kv.replace('count_post_total', msg_id)
         title = xhtml_escape(self.get_argument("title"))
-        info = md.convert(self.get_argument("info"))
-        self.kv.add('msg_%d'%msg_id, [msg_id, title, info, datetime.now().strftime( "%Y-%m-%d %H:%M:%S")])
+        content = md.convert(self.get_argument("content"))
+        self.kv.add('msg_%d'%msg_id, [msg_id, title, content, datetime.now().strftime( "%Y-%m-%d %H:%M:%S")])
 
         self.redirect("/msg/%d"%msg_id)
 
@@ -107,26 +107,9 @@ class DeleteHandler(BaseHandler):
             #password = self.get_argument("password")
             num = self.get_argument("id")
             self.kv.delete('post_%s' % num)
-            self.kv.replace('count_post_total',
-                            self.kv.get('count_post_total')-1)
             self.redirect("/")
         else:
             self.redirect("/%s" % num)
-
-
-class UserLoginHandler(BaseHandler):
-    # 缺少get
-    def post(self):
-        password = self.get_argument("password")
-        id = self.get_argument("id")
-        e = self.db.get("SELECT * FROM entries WHERE id = %s", int(id))
-        if checkuserpass(password, e["password"]):
-            self.set_secure_cookie("codeid", str(id))
-            self.redirect("/update/" + str(id))
-        else:
-            self.redirect("/" + str(id))
-
-# 未保存markdown之前的内容，只提供除info之外
 
 
 class UpdateHandler(BaseHandler):
