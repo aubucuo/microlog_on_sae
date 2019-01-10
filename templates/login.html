@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 <title>{% block title %}登录{% end %}</title>
 {% block body %}
-<form action="/auth/login" method="post" class="pure-form pure-form-aligned">
+<form action="/auth/login" method="post" class="pure-form pure-form-stacked">
   <fieldset>
 		<legend>登录</legend>
     <label for="email">登录</label>
-    <input id="email" type="email" placeholder="Email">
+    <input id="email" type="email" name='email'placeholder="Email">
     <label for="pswd">密码</label>
-    <input id="pswd" type="password" placeholder="Password">
+    <input id="pswd" type="password" name='password'placeholder="Password">
     <button type="submit" class="pure-button pure-button-primary">Sign in</button>
   {{ xsrf_form_html() }}
   </fieldset>

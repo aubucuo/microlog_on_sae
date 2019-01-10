@@ -33,7 +33,7 @@ class LoginHandler(BaseHandler):
     def get(self):
         if self.current_user:
             self.redirect("/")
-        self.render("login.html", msg='您已登录')
+        self.render("login.html", tip=0)
 
     def post(self):
         email_adr = str(self.get_argument("email", None))
@@ -44,8 +44,7 @@ class LoginHandler(BaseHandler):
             self.set_secure_cookie("user", user["email"])
             self.redirect("/")
         else:
-            msg = "Error"
-            self.render("login.html", msg=msg)
+            self.render("login.html", tip='出错了')
 
 
 class LogoutHandler(BaseHandler):
