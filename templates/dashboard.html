@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+<title>{% block title %}控制面板{% end %}</title>
+{% block body %}
+<form action="/dashboard" method="post" class="pure-form pure-form-aligned">
+  <fieldset>
+		<legend>删除kvdb数据</legend>
+
+    <label for="prefix">数据库前缀</label>
+    <input id="prefix" type="kvprefix" name='prefix' placeholder="要删除的kvdb前缀">
+
+    <button type="submit" class="pure-button pure-button-primary">！确认删除</button>
+  {{ xsrf_form_html() }}
+  </fieldset>
+</form>
+{% end %}
+
+{% block bottom %}
+{% end %}

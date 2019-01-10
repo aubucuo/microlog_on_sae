@@ -1,7 +1,7 @@
 {% extends "base.html" %}
   <title>{% block title %}{{ entry[1] }}——{{ escape(handler.settings["sitename"]) }}{% end %}</title>
 {% block head %}
-  <link rel="stylesheet" href="{{ static_url("prettify.css") }}" type="text/css" />
+  <link rel="stylesheet" href="{{ static_url('prettify.css') }}" type="text/css" />
   <meta name="description" content="{{ escape(entry[2][0:128]) }}">
 {% end %}
 
@@ -31,7 +31,7 @@
 
 {% block bottom %}
 <script type="text/javascript" src="http://lib.sinaapp.com/js/jquery/1.6.2/jquery.min.js"></script>
-<script type="text/javascript" src="{{ static_url("prettify.js")}}"></script>
+<script type="text/javascript" src="{{ static_url('prettify.js')}}"></script>
 <script type="text/javascript">$(document).ready(function(){prettyPrint();})</script>
 <script src="{{static_url("bootstrap-modal.js")}}"> </script>
 {% end %}

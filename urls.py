@@ -15,4 +15,5 @@ urls = [(r"/", code.HomeHandler),
         (r"/admin/start", admin.SiteStartHandler),
         (r"/admin/delete/(\d+)", admin.DeleteHandler),
         (r"/feed", code.FeedHandler),
+        (r"/dashboard",code.dashboard),
         (r'/debug',code.debug),]

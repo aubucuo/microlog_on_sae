@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 <title>{% block title %}发布代码——Code Share{% end %}</title>
 {% block body %}
-  <form action="{{ request.path }}" method="post" class="compose">
-  <fieldset>
-  <legend>发布文章</legend>
-          <div class="clearfix">
-            <label for="xlInput3">标题</label>
+<form action="{{ request.path }}" method="post" class="compose">
+	<fieldset>
+		<legend>发布文章</legend>
+		<div class="clearfix">
+			<label for="xlInput3">标题</label>
             <div class="input">
               <input name="title" type="text" id="title" class="span7" />
             </div>
@@ -26,9 +26,9 @@
             <a href="/"><button type="reset" class="btn">放弃提交</button></a>
       </div>
   </fieldset>
-    </div>
-    {{ xsrf_form_html() }}
-  </form>
+</div>
+{{ xsrf_form_html() }}
+</form>
 {% end %}
 
 {% block bottom %}
@@ -55,4 +55,3 @@
   //]]>
   </script>
 {% end %}
-
