@@ -8,7 +8,7 @@
 	<title> {{ escape(handler.settings["sitename"]) }}</title>
 	<link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-" crossorigin="anonymous">	
 {%block head %}{% end %}
-  <style>.button-msg {background: rgb(66, 184, 221);}</style>
+  <style>.button-msg {background: rgb(66, 184, 221);} .button-warning{background: rgb(223, 117, 20);} .tip{background: #1f8dd6;padding: 0.3em 1em;border-radius: 3px;color: #fff;}</style>
 </head>
 
 <body style='width:800px;margin-left:auto;margin-right:auto;margin-top:3em;zoom:1;'>
@@ -25,8 +25,8 @@
 				</div>
 			</div>
 			<div class="pure-u-4-5">
-        {% if msg %}
-        <button class="button-msg pure-button">{{ msg }}</button>
+        {% if tip %}
+        <button class="tip">{{ tip }}</button>
         {% end %}
         {% block body %}{% end %}
 			</div>
@@ -34,7 +34,7 @@
 	</div>
 
 	<div id="footer">
-		<p>&copy; {{ escape(handler.settings["sitename"]) }} 2019 &nbsp;&nbsp;Code in <a href="https://github.com/aubucuo/microlog_on_sae">Github</a></p>
+		<p>&copy; {{ escape(handler.settings["sitename"]) }} 2019
 		{% block bottom %}{% end %}
 	</div>
 </body>

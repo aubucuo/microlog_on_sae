@@ -2,7 +2,7 @@
 <p>当前一共发布了{{msg_counts}}条消息</p>
 <ul>
 	{% for i,entry in enumerate(entries) %}
-	    <li>#{{msg_counts-i}} <a href="/{{ entry[0] }}">{{entry[1]}}</a> {{entry[3]}}</li>
+	    <li>{{msg_counts-i}} <a href="/msg/{{ entry[0] }}">{{entry[1]}}</a> {{entry[3]}}</li>
 	{% end %}
 </ul>
 <div class="pagination">

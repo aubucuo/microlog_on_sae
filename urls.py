@@ -4,7 +4,7 @@
 from apps import code, admin
 
 urls = [(r"/", code.HomeHandler),
-        (r"/(\d+)", code.EntryHandler),
+        (r"/msg/(\d+)", code.EntryHandler),
         (r"/newcode", code.ComposeHandler),
         (r"/user/login", code.UserLoginHandler),
         (r"/update/(\d+)", code.UpdateHandler),

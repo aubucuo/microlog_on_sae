@@ -6,27 +6,17 @@
 {% end %}
 
 {% block body %}
-<div class="entry">
-    <div class="codeinfo clearfix">
-        <div class="title">
-            <h2>Title：<a href="/{{ entry[0] }}">{{ entry[1] }}</a></h2>
-        </div>
-        <div class="delete">
-            <span data-controls-modal="modal-from-dom" data-backdrop="true" data-keyboard="true" class="label important">DElete</span>
-        </div>
-        <div class="delete">
-            <span data-controls-modal="modal-from-update" data-backdrop="true" data-keyboard="true" class="label warning">Update</span>
-        </div>
-    </div>
-    <span class="label notice">Content</span>
-    <br>
+<article class="entry">
+    <h2>{{ entry[1] }}</h2>
+    <hr>
     <p>{{ entry[2] }}<p>
     <small>{{ entry[3] }}</small>
+    <hr>
     {% if current_user %}
-        <div class="admin"><a href="/admin/delete/{{ entry[0] }}">Delete</a></div>
-        <div class="admin"><a href="/admin/update/{{ entry[0] }}">Update</a></div>
+    <a class="pure-button button-secondary" href="/admin/update/{{ entry[0] }}">修改</a>
+    <a class="pure-button button-warning" href="/admin/delete/{{ entry[0] }}">删除</a>
     {% end %}
-</div>
+</article>
 {% end %}
 
 {% block bottom %}

@@ -5,7 +5,7 @@
     code 发布和管理模块
 """
 
-import datetime
+from datetime import datetime
 import tornado.web
 import tornado.database
 from settings import db, NAVNUM
@@ -28,7 +28,7 @@ class BaseHandler(tornado.web.RequestHandler):
     def login_stas(self):
         user_id = self.get_secure_cookie("user")
         if not user_id:
-            return None
+            return False
         return True
 
     def get_current_user(self):
@@ -40,8 +40,7 @@ class HomeHandler(BaseHandler):
 
     def get(self):
         count_post_total = self.kv.get('count_post_total')
-        entries = self.kv.get_by_prefix(
-            'post_', limit=8, marker=count_post_total-8 if count_post_total > 8 else 0)
+        entries = self.kv.get_by_prefix('msg_', limit=8, marker=count_post_total-8 if count_post_total > 8 else 0)
         #entries= generate ('post_1', [1, u'1', u'1\n', datetime.datetime(2019, 1, 7, 15, 57, 35, 880823)])
         postlist = []
         while 1:
@@ -49,10 +48,7 @@ class HomeHandler(BaseHandler):
                 postlist.append(next(entries)[1])
             except:
                 break
-        if not entries:
-            self.redirect("/newcode")
-        #self.write(str(entries))
-        self.render("home.html", entries=postlist[::-1],msg_counts=count_post_total, msg=0)
+        self.render("home.html", entries=postlist[::-1],msg_counts=count_post_total, tip=0)
 
 
 class PageHandler(BaseHandler):
@@ -73,10 +69,10 @@ class PageHandler(BaseHandler):
 class EntryHandler(BaseHandler):
 
     def get(self, codeid):
-        entry = self.kv.get('post_%s' % str(codeid))
+        entry = self.kv.get('msg_%s' % str(codeid))
         if not entry:
             raise tornado.web.HTTPError(404)
-        self.render("entry.html", entry=entry, msg=0)
+        self.render("entry.html", entry=entry, tip=0)
 
 
 class FeedHandler(BaseHandler):
@@ -88,27 +84,21 @@ class FeedHandler(BaseHandler):
         self.set_header("Content-Type", "application/atom+xml")
         self.render("feed.xml", entries=entries)
 
-# /newcode
-
 
 class ComposeHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
-        self.render("compose.html",msg=0)
+        self.render("compose.html",tip=0)
     # id title content time
 
     def post(self):
-        count = self.kv.get('count_post_total')+1
-        self.kv.replace('count_post_total', count)
+        msg_id = self.kv.get('count_post_total')+1
+        self.kv.replace('count_post_total', msg_id)
         title = xhtml_escape(self.get_argument("title"))
-        #code = xhtml_escape(self.get_argument("code"))
         info = md.convert(self.get_argument("info"))
+        self.kv.add('msg_%d'%msg_id, [msg_id, title, info, datetime.now().strftime( "%Y-%m-%d %H:%M:%S")])
 
-        self.kv.add('post_%d' %
-                    count, [count, title, info, datetime.datetime.now()])
-
-        self.redirect("/%d"%count)
-
+        self.redirect("/msg/%d"%msg_id)
 
 class DeleteHandler(BaseHandler):
 
@@ -169,7 +159,7 @@ class UpdateHandler(BaseHandler):
 class dashboard(BaseHandler):
     @tornado.web.authenticated
     def get(self):
-        self.render("dashboard.html",msg='')
+        self.render("dashboard.html",tip=0)
 
     def post(self):
         keys_delete = self.kv.getkeys_by_prefix(str(self.get_argument("prefix")))
@@ -180,7 +170,7 @@ class dashboard(BaseHandler):
         # 添加“已删除”信息
         self.kv.replace('count_post_total',
                             self.kv.get('count_post_total')-count)
-        self.render("dashboard.html",msg='已删除%d条数据'%count)
+        self.render("dashboard.html",tip='已删除%d条数据'%count)
 
 
 class debug(BaseHandler):
