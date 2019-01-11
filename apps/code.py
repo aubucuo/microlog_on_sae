@@ -7,15 +7,14 @@
 
 from datetime import datetime
 import tornado.web
-import tornado.database
-from settings import db, NAVNUM
+from settings import NAVNUM
 from libs import markdown
 from tornado.escape import xhtml_escape
 import sae.kvdb
 
 md = markdown.Markdown(safe_mode=True)
 
-sae.kvdb.Client().add('count_post_total', 0)  # post计数
+sae.kvdb.Client().add('count_for_msg', [0,0])  # count,index
 
 
 class BaseHandler(tornado.web.RequestHandler):
@@ -32,16 +31,16 @@ class BaseHandler(tornado.web.RequestHandler):
 class HomeHandler(BaseHandler):
 
     def get(self):
-        count_post_total = self.kv.get('count_post_total')
-        entries = self.kv.get_by_prefix('msg_', limit=8, marker=count_post_total-8 if count_post_total > 8 else 0)
-        #entries= generate ('post_1', [1, u'1', u'1\n', datetime.datetime(2019, 1, 7, 15, 57, 35, 880823)])
+        count_for_msg = self.kv.get('count_for_msg')
+        if count_for_msg[0]==0:
+            self.redirect('/newcode')
+            return
+        entries = self.kv.get_by_prefix('msg_', limit=8, marker=count_for_msg[0]-8 if count_for_msg[0] > 8 else 0)
+        #entries= generate ('msg_1', [1, u'1', u'1\n', datetime.datetime(2019, 1, 7, 15, 57, 35, 880823)])
         postlist = []
-        while 1:
-            try:
-                postlist.append(next(entries)[1])
-            except:
-                break
-        self.render("home.html", entries=postlist[::-1],msg_counts=count_post_total, tip=0)
+        for i in entries:
+            postlist.append(i[1])
+        self.render("home.html", entries=postlist[::-1],msg_counts=count_for_msg[0], tip=0)
 
 
 class PageHandler(BaseHandler):
@@ -88,11 +87,11 @@ class ComposeHandler(BaseHandler):
         title = xhtml_escape(self.get_argument("title"))
         content = md.convert(self.get_argument("content"))
 
-        msg_id = self.kv.get('count_post_total')+1
-        self.kv.replace('count_post_total', msg_id)
-        self.kv.add('msg_%d'%msg_id, [msg_id, title, content, datetime.now().strftime( "%Y-%m-%d %H:%M:%S")])
+        msg_id = map(lambda x :x+1,self.kv.get('count_for_msg'))
+        self.kv.replace('count_for_msg', msg_id)
+        self.kv.add('msg_%d'%msg_id[1], [msg_id[1], title, content, datetime.now().strftime( "%Y-%m-%d %H:%M:%S")])
 
-        self.redirect("/msg/%d"%msg_id)
+        self.redirect("/msg/%d"%msg_id[1])
 
 
 class UpdateHandler(BaseHandler):
@@ -128,18 +127,24 @@ class dashboard(BaseHandler):
         self.render("dashboard.html",tip=0)
 
     def post(self):
-        keys_delete = self.kv.getkeys_by_prefix(str(self.get_argument("prefix")))
+        key_prefix=str(self.get_argument("prefix"))
+
+        keys_delete = self.kv.getkeys_by_prefix(key_prefix)
         count = 0
         for key in keys_delete:
             self.kv.delete(key)
             count+=1
-        # 添加“已删除”信息
-        self.kv.replace('count_post_total',
-                            self.kv.get('count_post_total')-count)
+
+        if 'msg' in key_prefix:
+            current_msg_count=self.kv.get('count_for_msg')
+            current_msg_count[0]-=count
+            self.kv.replace('count_for_msg', current_msg_count)
         self.render("dashboard.html",tip='已删除%d条数据'%count)
 
 
 class debug(BaseHandler):
     def get(self):
-        num=self.kv.get('test')
-        self.write(str(num))
+        ls=[]
+        en=self.kv.get_by_prefix('msg_', limit=8, marker=0)
+        ls.append(next(en))
+        self.write(ls)

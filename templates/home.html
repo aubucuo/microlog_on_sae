@@ -1,9 +1,8 @@
 {% extends "base.html" %} {% block body %}
-<p>当前一共发布了{{msg_counts}}条消息</p>
-<hr>
+<p>当前一共发布了 {{msg_counts}} 条消息</p>
 <div class = 'pure-form-stacked'>
 	{% for i,entry in enumerate(entries) %}
-	     <p>{{entry[3]}} <a href="/msg/{{ entry[0] }}">{{entry[1]}}</a></p>
+	     <p>{{entry[3]}}  <a href="/msg/{{ entry[0] }}">{{entry[1]}}</a></p>
 	{% end %}
 </div>
 <div class="pagination">
