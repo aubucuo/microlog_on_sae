@@ -31,9 +31,12 @@ class SiteStartHandler(BaseHandler):
 class LoginHandler(BaseHandler):
 
     def get(self):
+        tip=0
         if self.current_user:
             self.redirect("/")
-        self.render("login.html", tip=0)
+        elif self.get_argument("next", "/")!='/':
+            tip='需要登录以继续'
+        self.render("login.html", tip=tip)
 
     def post(self):
         email_adr = str(self.get_argument("email", None))
@@ -54,13 +57,3 @@ class LogoutHandler(BaseHandler):
         self.redirect(self.get_argument("next", "/"))
 
 
-class DeleteHandler(BaseHandler):
-
-    @tornado.web.authenticated
-    def get(self, slug):
-        code = self.kv.get('post_%s' % str(slug))
-        if not code:
-            raise tornado.web.HTTPError(404)
-        else:
-            self.kv.delete("post_%s" % str(slug))
-            self.redirect("/")

@@ -1,27 +1,21 @@
 {% extends "base.html" %}
   <title>{% block title %}{{ entry[1] }}——{{ escape(handler.settings["sitename"]) }}{% end %}</title>
 {% block head %}
-  <link rel="stylesheet" href="{{ static_url('prettify.css') }}" type="text/css" />
   <meta name="description" content="{{ escape(entry[2][0:128]) }}">
+  <style>	.markdown-body {box-sizing: border-box;min-width: 200px;max-width: 980px;margin: 0 auto;padding: 45px;}@media (max-width: 767px) {.markdown-body {padding: 15px;}}</style>
 {% end %}
 
 {% block body %}
-<article class="entry">
+<article class="markdown-body">
     <h2>{{ entry[1] }}</h2>
-    <hr>
     <p>{{ entry[2] }}<p>
     <small>{{ entry[3] }}</small>
-    <hr>
-    {% if current_user %}
-    <a class="pure-button button-secondary" href="/admin/update/{{ entry[0] }}">修改</a>
-    <a class="pure-button button-warning" href="/admin/delete/{{ entry[0] }}">删除</a>
-    {% end %}
 </article>
+{% if current_user %}
+<a class="pure-button button-secondary" href="/code/update/{{ entry[0] }}">修改</a>
+<a class="pure-button button-warning" href="/code/delete/{{ entry[0] }}">删除</a>
 {% end %}
-
+{% end %}
 {% block bottom %}
-<script type="text/javascript" src="http://lib.sinaapp.com/js/jquery/1.6.2/jquery.min.js"></script>
-<script type="text/javascript" src="{{ static_url('prettify.js')}}"></script>
-<script type="text/javascript">$(document).ready(function(){prettyPrint();})</script>
-<script src="{{static_url("bootstrap-modal.js")}}"> </script>
+<link href="https://cdn.bootcss.com/github-markdown-css/2.10.0/github-markdown.min.css" rel="stylesheet">
 {% end %}

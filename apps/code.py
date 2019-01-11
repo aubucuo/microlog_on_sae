@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-    code 发布和管理模块
+    msg 发布和管理模块
 """
 
 from datetime import datetime
@@ -23,13 +23,6 @@ class BaseHandler(tornado.web.RequestHandler):
     @property
     def kv(self):
         return sae.kvdb.Client()
-
-    @property
-    def login_stas(self):
-        user_id = self.get_secure_cookie("user")
-        if not user_id:
-            return False
-        return True
 
     def get_current_user(self):
         user_email = self.get_secure_cookie("user")
@@ -92,24 +85,14 @@ class ComposeHandler(BaseHandler):
     # id title content time
 
     def post(self):
-        msg_id = self.kv.get('count_post_total')+1
-        self.kv.replace('count_post_total', msg_id)
         title = xhtml_escape(self.get_argument("title"))
         content = md.convert(self.get_argument("content"))
+
+        msg_id = self.kv.get('count_post_total')+1
+        self.kv.replace('count_post_total', msg_id)
         self.kv.add('msg_%d'%msg_id, [msg_id, title, content, datetime.now().strftime( "%Y-%m-%d %H:%M:%S")])
 
         self.redirect("/msg/%d"%msg_id)
-
-class DeleteHandler(BaseHandler):
-
-    def post(self):
-        if self.login_stas:
-            #password = self.get_argument("password")
-            num = self.get_argument("id")
-            self.kv.delete('post_%s' % num)
-            self.redirect("/")
-        else:
-            self.redirect("/%s" % num)
 
 
 class UpdateHandler(BaseHandler):
@@ -157,7 +140,6 @@ class dashboard(BaseHandler):
 
 
 class debug(BaseHandler):
-    def get(self,):
-        num=self.kv.replace('count_post_total',
-                            self.kv.get('count_post_total')-9)
+    def get(self):
+        num=self.kv.get('test')
         self.write(str(num))
