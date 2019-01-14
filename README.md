@@ -13,8 +13,9 @@ Because it's FREE on sae-platform ;)
 ```
 - 博文的数据结构：  
 key: `msg_%d` value: [count,title,content,time] 
-- 爬虫（签到）的数据结构  
-key: `crawler_%d` value: [url, header, cookie, time]
+- （每日签到）爬虫的数据结构  
+key: `spider_%d` value: [index, url, header, cookie, runningtime_count, response]
+（爬虫默认一天执行一次）有需要可去[这里](https://www.sinacloud.com/doc/sae/services/cron.html)自行定制。
 
 
 ## 使用方法

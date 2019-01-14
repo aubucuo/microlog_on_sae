@@ -11,21 +11,18 @@ class SiteStartHandler(BaseHandler):
     def get(self):
         admin = self.kv.get('user_1')
         if not admin:
-            self.render("start.html")
+            self.render("start.html",tip='创建管理员')
         else:
             self.redirect("/")
 
     def post(self):
         email_adr = str(self.get_argument("email"))
-        pswd1 = self.get_argument("password1")
-        pswd2 = self.get_argument("password2")
+        pswd1 = self.get_argument("password")
 
-        if pswd1 != pswd2:
-            self.redirect("/admin/start")
         password = hexpassword(pswd1)
         self.kv.add('user_%s' % email_adr, {
                     'email': email_adr, 'passwd': password, })
-        self.redirect("/auth/login", msg='注册成功')
+        self.redirect("/auth/login")
 
 
 class LoginHandler(BaseHandler):
