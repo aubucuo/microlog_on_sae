@@ -11,7 +11,11 @@ class spiderpanelHandler(BaseHandler):
     def get(self):
         spiderlist = self.kv.get_by_prefix(
             'spider_', limit=8, marker=count_for_msg[0]-8 if count_for_msg[0] > 8 else 0)
-        self.render('spiderman.html', spiderlist=spiderlist, tip=0)
+        entries = []
+        for i in spiderlist:
+            entries.append(i)
+
+        self.render('spiderman.html', spider_counts=kv.get('count_for_spider')[0],entries=entries, tip=0)
 
 
 class spidereditHandler(BaseHandler):

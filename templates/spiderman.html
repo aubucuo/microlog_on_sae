@@ -1,0 +1,9 @@
+{% extends "base.html" %} {% block body %}
+<p>当前一共发布了 {{spider_counts}} 条消息</p>
+<div class = 'pure-form-stacked'>
+	{% for entry in entries %}
+	     <p>{{entry[1][0] }} {{entry[0]}} 执行次数:{{entry[1][4]}}, 最新response:{{entry[1][5]}}</p>
+	{% end %}
+</div>
+
+{% end %}
