@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}
+  <title>新建爬虫-escape(handler.settings["sitename"])</title>
+{% end %}
+{% block body %}
+<form action="{{ request.path }}" method="post" class="pure-form">
+	<fieldset class='pure-group '>
+		<legend>Add new spider</legend>
+    <input name="title" type="title">
+    <input name="url" type="url">
+    <input name="header" type="title">
+    <input name="cookie" type="title">
+    <button type="submit" class="pure-button pure-button-primary">发布</button>
+  {{ xsrf_form_html() }}
+  </fieldset>
+</form>
+{% end %}
+
+{% block bottom %}
+{% end %}

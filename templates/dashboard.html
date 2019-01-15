@@ -1,18 +1,21 @@
 {% extends "base.html" %}
 <title>{% block title %}控制面板{% end %}</title>
 {% block body %}
-<form action="/dashboard" method="post" class="pure-form pure-form-aligned">
+<form action="/dashboard" method="post" class="pure-form pure-form-stacked">
   <fieldset>
-		<legend>删除kvdb数据</legend>
+		<legend>查询/删除kvdb数据</legend>
 
     <label for="prefix">数据库前缀</label>
-    <input id="prefix" type="kvprefix" name='prefix' placeholder="要删除的kvdb前缀">
-
-    <button type="submit" class="pure-button pure-button-primary">！确认删除</button>
+    <input id="prefix" type="kvprefix" name='prefix' placeholder="kvdb前缀">
+    <select name='state'>
+        <option value="select">select</option>
+        <option value="delete">delete</option>
+    </select>
+    <button type="submit" class="pure-button pure-button-primary">！确认</button>
   {{ xsrf_form_html() }}
   </fieldset>
 </form>
-<p>删除首页消息前缀： msg_  ; 用户数据：'user_%s'%email_adr</p>
+<p>首页消息前缀 msg_  ; 用户数据 'user_%s'%email_adr ；爬虫 spider_title ；计数 count_for_msg count_for_spider</p>
 {% end %}
 
 {% block bottom %}

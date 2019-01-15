@@ -35,7 +35,7 @@ class HomeHandler(BaseHandler):
         if count_for_msg[0]==0:
             self.redirect('/newcode')
             return
-        entries = self.kv.get_by_prefix('msg_', limit=8, marker=count_for_msg[0]-8 if count_for_msg[0] > 8 else 0)
+        entries = self.kv.get_by_prefix('msg_', limit=8, marker='msg_%s'%str(count_for_msg[0]-8 if count_for_msg[0] > 8 else 0))
         #entries= generate ('msg_1', [1, u'1', u'1\n', datetime.datetime(2019, 1, 7, 15, 57, 35, 880823)])
         postlist = []
         for i in entries:
@@ -67,16 +67,6 @@ class EntryHandler(BaseHandler):
         self.render("entry.html", entry=entry, tip=0)
 
 
-class FeedHandler(BaseHandler):
-    pass
-
-    def get(self):
-        entries = self.db.query("SELECT * FROM entries ORDER BY published "
-                                "DESC LIMIT 10")
-        self.set_header("Content-Type", "application/atom+xml")
-        self.render("feed.xml", entries=entries)
-
-
 class ComposeHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
@@ -100,20 +90,25 @@ class dashboard(BaseHandler):
         self.render("dashboard.html",tip=0)
 
     def post(self):
-        key_prefix=str(self.get_argument("prefix"))
+        key_prefix=str(self.get_argument("prefix")
+        action = str(self.get_argument('state'))
+        if  action == 'delete':
+        
+            keys_delete = self.kv.getkeys_by_prefix(key_prefix)
+            count = 0
+            for key in keys_delete:
+                self.kv.delete(key)
+                count+=1
 
-        keys_delete = self.kv.getkeys_by_prefix(key_prefix)
-        count = 0
-        for key in keys_delete:
-            self.kv.delete(key)
-            count+=1
-
-        if 'msg' in key_prefix:
-            current_msg_count=self.kv.get('count_for_msg')
-            current_msg_count[0]-=count
-            self.kv.replace('count_for_msg', current_msg_count)
-        self.render("dashboard.html",tip='已删除%d条数据'%count)
-
+            if 'msg' in key_prefix:
+                current_msg_count=self.kv.get('count_for_msg')
+                current_msg_count[0]-=count
+                self.kv.replace('count_for_msg', current_msg_count)
+            self.render("dashboard.html",tip='已删除%d条数据'%count)
+        else:
+            #select
+            tip='查询：%s'%str(self.kv.get(key_prefix))
+            self.render('dashboard.html',tip=tip)
 
 class debug(BaseHandler):
     def get(self):
