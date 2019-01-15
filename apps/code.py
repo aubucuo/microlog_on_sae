@@ -92,34 +92,7 @@ class ComposeHandler(BaseHandler):
         self.kv.add('msg_%d'%msg_id[1], [msg_id[1], title, content, datetime.now().strftime( "%Y-%m-%d %H:%M:%S")])
 
         self.redirect("/msg/%d"%msg_id[1])
-
-
-class UpdateHandler(BaseHandler):
-
-    def get(self, codeid):
-        cookie_codeid = self.get_secure_cookie("codeid")
-        # 逻辑有点问题
-        if str(codeid) == cookie_codeid:
-            code = self.kv.get('post_%s' % cookie_codeid)
-            self.render("update.html", code=code)
-        else:
-            self.redirect("/%s" % cookie_codeid)
-
-    def post(self, codeid):
-        title = xhtml_escape(self.get_argument("title"))
-        #code = xhtml_escape(self.get_argument("code"))
-        info = md.convert(self.get_argument("info"))
-        # 鉴权太弱
-        check = self.get_argument("check", None)
-        if check != "1984":
-            self.redirect("/newcode")
-            return
-
-        self.kv.replace('post_%d' %
-                        codeid, [codeid, title, info, datetime.datetime.now()])
-
-        self.redirect("/%d" % codeid)
-
+     
 
 class dashboard(BaseHandler):
     @tornado.web.authenticated
