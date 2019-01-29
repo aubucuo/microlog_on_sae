@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from apps import code, admin ,spiderman
+from apps import code, admin ,spiderman ,pages
 
-urls = [(r"/", code.HomeHandler),
+urls = [(r"/", pages.homepage),
         (r"/msg/(\d+)", code.EntryHandler),
         (r"/newmsg", code.ComposeHandler),
         (r"/page/(\d+)", code.PageHandler),

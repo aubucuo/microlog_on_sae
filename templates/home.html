@@ -1,12 +1,12 @@
-{% extends "base.html" %} {% block body %}
-<p>当前一共发布了 {{msg_counts}} 条消息：</p>
-<div class = 'pure-form-stacked'>
-	{% for i,entry in enumerate(entries) %}
-	     <p><a href="/msg/{{ entry[0] }}">{{entry[1]}}</a></p>
-	{% end %}
-</div>
-<div class="pagination">
-  <button class="pure-button pure-button-disabled">上一页</button>
-  <a class="pure-button pure-button-primary" href="/pages/2">下一页</a>
-</div>
+{% extends "base.html" %} 
+{% block body %}
+	<section class="nes-container with-title">
+      <h2 class="title">Lists</h2>
+      <div class="lists">
+        <ul class="nes-list is-disc">
+					<li>to be done</li>
+        </ul>
+      </div>
+	</section>
+
 {% end %}

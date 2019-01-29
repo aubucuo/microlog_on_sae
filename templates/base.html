@@ -2,41 +2,42 @@
 <html lang="en">
 
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="description" content="A personal site for lifelog">
-	<title> {{ escape(handler.settings["sitename"]) }}</title>
-	<link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-" crossorigin="anonymous">	
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta name="description" content="NES.css is a NES-style CSS Framework." />
+    <meta name="keywords" content="html5,css,framework,sass,NES,8bit" />
+    <meta name="author" content="© 2019 jaymi" />
+    <link rel="shortcut icon" type="image/png" href="favicon.png">
+    <link rel="shortcut icon" sizes="196x196" href="favicon.png">
+    <link rel="apple-touch-icon" href="favicon.png">
+
+    <title>Jaymicn - tools</title>
+
+    <link href="https://fonts.lug.ustc.edu.cn/css?family=Press+Start+2P" rel="stylesheet">
+    <link href="https://unpkg.com/nes.css/css/nes.min.css" rel="stylesheet" />
+    <link href="../static/style.css" rel="stylesheet" />
+    
+<script>window.dataLayer=window.dataLayer||[];</script>
+
 {%block head %}{% end %}
-  <style>.button-msg {background: rgb(66, 184, 221);} .button-warning{background: rgb(223, 117, 20);} .tip{background: #1f8dd6;padding: 0.3em 1em;border-radius: 3px;color: #fff;}</style>
 </head>
 
-<body style='width:600px;margin-left:auto;margin-right:auto;margin-top:3em;zoom:1;'>
-	<div id="layout">
-		<div class="pure-g">
-			<div class="pure-u-1-5">
-				<div class="pure-menu custom-restricted-width">
-					<ul class="pure-menu-list">
-						<li class="pure-menu-item pure-menu-link"><b>Jaymi.cn</b></li>
-						<li class="pure-menu-item pure-menu-selected"><a href="/" class="pure-menu-link">首页</a></li>
-						<li class="pure-menu-item"><a href="/newcode" class="pure-menu-link">发布</a></li>
-            <li class="pure-menu-item"><a href="/dashboard" class="pure-menu-link">监控台</a></li>
-					</ul>
-				</div>
-			</div>
-			<div class="pure-u-4-5">
-        {% if tip %}
-        <aside class="tip">{{ tip }}</aside>
-        {% end %}
-        {% block body %}{% end %}
-			</div>
-		</div>
-	</div>
+<body>
+	<header>
+	<h1><i class="snes-jp-logo brand"></i>Jaymicn</h1>
+	<p>Tools for myself.</p>
+	</header>
 
-	<footer id="footer">
-    <hr>
-		<p style="text-align:rignt">&copy; {{ escape(handler.settings["sitename"]) }} 2019</p>
-		{% block bottom %}{% end %}
-	</footer>
+	<a class="github-link" href="https://github.com/nostalgic-css/NES.css" target="_blank">
+	  <p class="nes-balloon from-right">Fork me<br />on GitHub</p>
+	  <i class="nes-octocat"></i>
+	</a>
+
+    {% block body %}{% end %}
+
+<footer class="footer">
+	<p>2019 jaymicn	</p>
+</footer>
 </body>
 </html>
