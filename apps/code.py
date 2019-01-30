@@ -15,7 +15,7 @@ import sae.kvdb
 md = markdown.Markdown(safe_mode=True)
 
 sae.kvdb.Client().add('count_for_msg', [0,0])  # current count and index
-sae.kvdb.Client().add('count_for_spider', [0,0])  # count,index
+#sae.kvdb.Client().add('count_for_spider', [0,0])  # count,index
 
 class BaseHandler(tornado.web.RequestHandler):
 

@@ -16,6 +16,6 @@ urls = [(r"/", pages.homepage),
 
         (r"/spider",spiderman.spiderpanelHandler),
         (r"/spideredit",spiderman.spidereditHandler),
-        (r"/runspider",spiderman.runspiderhandler),
+        (r"/spider_daily",spiderman.spider_daily),
 
         (r'/debug',code.debug),]

@@ -28,15 +28,15 @@ class spidereditHandler(BaseHandler):
     def post(self):
         title = str(self.get_argument("title"))
         url = str(self.get_argument("url"))
-        header = str(self.get_argument("header"))
-        cookie = str(self.get_argument("cookie"))
+        header = str(self.get_argument("header",None))
+        cookie = str(self.get_argument("cookie",None))
+        for i in [header,cookie]:
+            if 
         if url != '':
             #add new spider
-            c_f_s = self.kv.get('count_for_spider')
-            self.kv.add('spider_%s' % title, [c_f_s[1], url, header, cookie, 0, 0])
-            c_f_s[0] += 1
-            self.kv.replace('count_for_spider', c_f_s)
-            self.render("spiderman.html", tip='Add spider success!')
+            self.kv.add('spider_%s' % title, [title, url, header, cookie, 0, 0])
+            self.render("spideredit.html", tip='Add spider success!')
+
         else:
             #update cookie
             spiderinfo=self.kv.get('spider_%s'%title)
@@ -45,18 +45,27 @@ class spidereditHandler(BaseHandler):
             self.render("spideredit.html", tip='Update cookie')
 
 
-class runspiderhandler(BaseHandler):
+class spider_daily(BaseHandler):
     def get(self):
+
         spider_list = self.kv.get_by_prefix('spider_')
         #spider_list=generate(key:[value])
-        #xiami.com 有连续签到的天数变量
-        if 'xiami' in spider[0]:
-            spider[1][3]['t_sign_auth']+=1
+        
+        '''
+        ls = []
+        for spider in spider_list:
+            ls.append(spider[1][1])
+        self.write(str(ls))
+        return 
+        '''
+
+        resp = {}
         for spider in spider_list:
             with requests.Session() as s:
-                spider[1][5]=s.get(spider[1][1],headers=spider[1][2],cookies=spider[1][3])
+                spider[1][5]=s.get(spider[1][1],headers=spider[1][2],cookies=spider[1][3]).json()
                 spider[1][4]+=1
                 self.kv.replace(spider[0],spider[1])
+                resp[spider[1][0]] = spider[1][5]
 
-        self.write('All done')
+        self.write(resp)
 
