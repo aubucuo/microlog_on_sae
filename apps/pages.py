@@ -9,15 +9,15 @@ class homepage(BaseHandler):
         self.render('home.html')
 
 class dashboard(BaseHandler):
+
     @tornado.web.authenticated
     def get(self):
         self.render("dashboard.html",tip=0)
 
     def post(self):
-        key_prefix=str(self.get_argument("prefix")
-        action = str(self.get_argument('checkbox'))
-        if  action:
-        
+        key_prefix=str(self.get_argument("prefix"))
+        checked = self.get_argument('check',None)
+        if  checked:
             keys_delete = self.kv.getkeys_by_prefix(key_prefix)
             count = 0
             for key in keys_delete:

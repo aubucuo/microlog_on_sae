@@ -1,19 +1,27 @@
 {% extends "base.html" %}
-{% block title %}
-  <title>新建爬虫-escape(handler.settings["sitename"])</title>
-{% end %}
 {% block body %}
-<form action="{{ request.path }}" method="post" class="pure-form">
-	<fieldset class='pure-group '>
-		<legend>Add new spider</legend>
-    <input name="title" type="title">
-    <input name="url" type="url">
-    <input name="header" type="title">
-    <input name="cookie" type="title">
-    <button type="submit" class="pure-button pure-button-primary">发布</button>
-  {{ xsrf_form_html() }}
+
+<section class="nes-container with-title">
+  <h2 class="title">Add Spider</h2>
+  <form action="{{ request.path }}" method="post">
+	<fieldset>
+  <div class="nes-field">
+    <input type="text" id="name_field" class="nes-input" name='title' placeholder="Title">
+  </div>
+  <div class="nes-field">
+    <input type="text" id="name_field" class="nes-input" name='url' placeholder="Url">
+  </div>
+  <div class="nes-field">
+    <input type="text" id="name_field" class="nes-input" name='header' placeholder="Header">
+  </div>
+  <div class="nes-field">
+    <input type="text" id="name_field" class="nes-input" name='cookie' placeholder="Cookie">
+  </div>
+  <button type="submit" class="nes-btn is-success">Add Spider</button>
+    {{ xsrf_form_html() }}
   </fieldset>
 </form>
+</section>
 {% end %}
 
 {% block bottom %}

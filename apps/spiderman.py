@@ -49,15 +49,14 @@ class runspiderhandler(BaseHandler):
     def get(self):
         spider_list = self.kv.get_by_prefix('spider_')
         #spider_list=generate(key:[value])
+        #xiami.com 有连续签到的天数变量
+        if 'xiami' in spider[0]:
+            spider[1][3]['t_sign_auth']+=1
         for spider in spider_list:
-            #xiami.com 有连续签到的天数变量
-            if 'xiami' in spider[0]:
-                spider[1][3]['t_sign_auth']+=1
-                tip='虾米签到成功'
             with requests.Session() as s:
                 spider[1][5]=s.get(spider[1][1],headers=spider[1][2],cookies=spider[1][3])
                 spider[1][4]+=1
                 self.kv.replace(spider[0],spider[1])
 
-        self.write('All done%s'%tip)
+        self.write('All done')
 
