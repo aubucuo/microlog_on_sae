@@ -1,4 +1,15 @@
----
-name: tosae
-version: 1
-...
+cron:
+- description: daily sign
+  url: /spider_daily
+  schedule: "0 2 * * *"
+  description: "每天凌晨2点执行一次"
+
+- description: weiboaddcom
+  url: /weiboaddcom
+  schedule: "0 6-23/5 * * *"
+  description: "6-23点每5小时执行一次"
+
+  
+handlers:
+- url: /static/
+  static_path: static

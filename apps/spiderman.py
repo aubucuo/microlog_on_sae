@@ -30,8 +30,28 @@ class spidereditHandler(BaseHandler):
         url = str(self.get_argument("url"))
         header = str(self.get_argument("header",None))
         cookie = str(self.get_argument("cookie",None))
-        for i in [header,cookie]:
-            if 
+
+        info = {"header":header,"cookie":cookie}
+        for i in info:
+            if ":" in info[i]:
+                info[i] = map(lambda x : x.split(":") , info[i].strip('{},').split(","))
+                d = {}
+                for element in info[i]:
+                    d[element[0].strip('" ')]=element[1].strip('" ')
+                info[i] = d
+
+            elif "=" in info[i]:
+                info[i] = map(lambda x : x.strip().split("="), info[i].split(";").strip())
+                d = {}
+                for element in info[i]:
+                    d[element[0].strip('" ')]=element[1].strip('" ')
+                info[i] = d
+
+            else:
+                continue
+        header = info['header']
+        cookie = info['cookie']
+
         if url != '':
             #add new spider
             self.kv.add('spider_%s' % title, [title, url, header, cookie, 0, 0])
@@ -50,19 +70,11 @@ class spider_daily(BaseHandler):
 
         spider_list = self.kv.get_by_prefix('spider_')
         #spider_list=generate(key:[value])
-        
-        '''
-        ls = []
-        for spider in spider_list:
-            ls.append(spider[1][1])
-        self.write(str(ls))
-        return 
-        '''
 
         resp = {}
         for spider in spider_list:
             with requests.Session() as s:
-                spider[1][5]=s.get(spider[1][1],headers=spider[1][2],cookies=spider[1][3]).json()
+                spider[1][5]=s.get(spider[1][1],headers=spider[1][2],cookies=spider[1][3] if len(spider[1][3]) > 10 else None).json()
                 spider[1][4]+=1
                 self.kv.replace(spider[0],spider[1])
                 resp[spider[1][0]] = spider[1][5]
