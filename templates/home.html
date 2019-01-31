@@ -3,13 +3,21 @@
 	<section class="nes-container with-title">
       <h2 class="title">Spider Node</h2>
       <div class="lists">
-        <ul class="nes-list is-disc">
-					<li>Xiami_music sign in : {{info['xiami']}}</li>
-          <li>Weibo comment robot : execute {{info['weibo_comment']}} times</li>
-          <li>JayChou's Instagram to Weibo : 121 [Stopped in 2018/10/18]<li>
+        <ul class="nes-list is-circle">
+					<li><a href='https://www.xiami.com/u/11743817' target="_blank">XIAMI_music</a> sign in : {{data['xiami_day']}} days</li>
+          <li>JayChou's Instagram to Weibo : 121 [Stopped in 2018/10/18]</li>
         </ul>
       </div>
 	</section>
-  
+  <section class="nes-container with-title">
+    <h2 class="title">Notes Node</h2>
+    <div class="lists">
+      <ul class="nes-list is-disc">
+        {% for i in data["yuque_docs"] %}
+          <li> <a href='https://www.yuque.com/jaymi/note/{{i["slug"]}}' target="_blank">{{i["title"]}} </a></li>
+        {% end %}
+      </ul>
+    </div>
+	</section>
 
 {% end %}

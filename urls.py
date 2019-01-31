@@ -17,6 +17,8 @@ urls = [(r"/", pages.homepage),
         (r"/spider",spiderman.spiderpanelHandler),
         (r"/spideredit",spiderman.spidereditHandler),
         (r"/spider_daily",spiderman.spider_daily),
-        (r"/xiami_debug",spiderman.xiami_debug),
+        (r"/yuque_webhook",spiderman.yuque_webhook),
+        
 
         (r'/debug',code.debug),]
+#(r"/xiami_debug",spiderman.xiami_debug),

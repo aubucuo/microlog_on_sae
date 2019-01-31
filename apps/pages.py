@@ -6,8 +6,12 @@ from code import BaseHandler
 
 class homepage(BaseHandler):
     def get(self):
-
-        self.render('home.html')
+        xiami_day = self.kv.get('spider_xiami')['cookie']["t_sign_auth"]
+        data = {"xiami_day":xiami_day}
+        data["yuque_docs"] = []
+        for i in self.kv.get("yuque_note_toc") :
+            data["yuque_docs"].append(i) 
+        self.render('home.html',data = data)
 
 class dashboard(BaseHandler):
 

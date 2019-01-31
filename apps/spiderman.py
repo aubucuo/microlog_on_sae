@@ -85,8 +85,27 @@ class spider_daily(BaseHandler):
 
         self.write(resp)
 
-#class weibo_comment(BaseHandler):
-#    def get(self):
+class yuque_webhook(BaseHandler):
+    def get(self):
+        with requests.Session() as s:
+            url = "https://www.yuque.com/api/v2/repos/209206/toc"
+
+            headers = {
+        "Content-Type":"application/x-www-form-urlencoded",
+        "User-Agent":"sae_plat",
+        "X-Auth-Token": "Ozm3E1GEZetQISn2bmaBs1WlgWiDBryOPX2zpDaV",
+        }
+            docs = s.get(url,headers=headers).json()
+            ls = []
+            docs_count = len(docs['data']) if len(docs['data']) < 5 else 5
+            for i in range(docs_count):
+                ls.append({"slug":docs['data'][i]["slug"], "title":docs['data'][i]["title"].encode("u8") })
+
+            self.kv.set("yuque_note_toc",ls)
+            self.write(str(ls))
+
+            
+'''
 class xiami_debug(BaseHandler):
     def get(self):
         headers1 = {
@@ -118,3 +137,4 @@ class xiami_debug(BaseHandler):
         xiami['header'] = headers1
         self.kv.replace('spider_xiami', xiami) 
         self.write(str(xiami))
+'''
