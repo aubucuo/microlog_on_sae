@@ -87,6 +87,8 @@ class spider_daily(BaseHandler):
 
 class yuque_webhook(BaseHandler):
     def get(self):
+        self.write('<h1>Hello there!</h1>')
+    def post(self):
         with requests.Session() as s:
             url = "https://www.yuque.com/api/v2/repos/209206/toc"
 
