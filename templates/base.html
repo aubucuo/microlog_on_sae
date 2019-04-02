@@ -1,45 +1,52 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="cmn-hans">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <meta name="description" content="jaymicn is a self_website" />
-    <meta name="keywords" content="html5,css,framework,sass,NES,8bit" />
-    <meta name="author" content="© 2019 jaymi" />
-    <link rel="shortcut icon" type="image/png" sizes="196x196" href="http://upyun.jaymi.cn/static/favicon.png">
-    <link rel="apple-touch-icon" href="http://upyun.jaymi.cn/static/favicon.png">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A sign robot">
+    <title>SignRobot</title>
 
-    <title>Jaymicn</title>
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-" crossorigin="anonymous">
 
-    <link href="https://fonts.lug.ustc.edu.cn/css?family=Press+Start+2P" rel="stylesheet">
-    <link href="https://unpkg.com/nes.css/css/nes.min.css" rel="stylesheet" />
-    <link href="http://upyun.jaymi.cn/static/style.css" rel="stylesheet" />
-    
-<script>window.dataLayer=window.dataLayer||[];</script>
+        <!--[if lte IE 8]>
+            <link rel="stylesheet" href="/static/css/layouts/side-menu-old-ie.css">
+        <![endif]-->
+        <!--[if gt IE 8]><!-->
+            <link rel="stylesheet" href="/static/css/layouts/side-menu.css">
+        <!--<![endif]-->
 
 {%block head %}{% end %}
 </head>
 
 <body>
-	<header>
-	<h1><i class="snes-jp-logo brand"></i>Jaymi.cn</h1>
-	<p>Tools for myself.</p>
-	</header>
+<div id="layout">
+    <!-- Menu toggle -->
+    <a href="#menu" id="menuLink" class="menu-link">
+        <!-- Hamburger icon -->
+        <span></span>
+    </a>
 
-	<a class="github-link" href="https://github.com/aubucuo" target="_blank">
-	  <p class="nes-balloon from-right">Fork me<br />on GitHub</p>
-	  <i class="nes-octocat"></i>
-	</a>
+    <div id="menu">
+        <div class="pure-menu">
+            <a class="pure-menu-heading" href="#">Sign.jaymi.cn</a>
 
-<div class="nes-container is-rounded">
+            <ul class="pure-menu-list">
+                <li class="pure-menu-item"><a href="#" class="pure-menu-link">首页</a></li>
+                <li class="pure-menu-item"><a href="#" class="pure-menu-link">About</a></li>
+
+                <li class="pure-menu-item menu-item-divided pure-menu-selected">
+                    <a href="#" class="pure-menu-link">Services</a>
+                </li>
+
+            </ul>
+        </div>
+    </div>
     {% block body %}{% end %}
 </div>
-    
 
-<footer class="footer">
-	<p>2019 jaymi.cn <a href='https://github.com/aubucuo/microlog_on_sae'>Source Code</a></p>
-</footer>
+<script src="/static/js/ui.js"></script>
+
 </body>
+
 </html>
