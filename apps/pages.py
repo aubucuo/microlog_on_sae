@@ -46,4 +46,20 @@ class dashboard(BaseHandler):
             else:
                 tip='Query result：%s'%str(self.kv.get(key_prefix))
             self.render('dashboard.html',tip=tip)
-
+            
+class study(BaseHandler):
+    
+    def get(self):
+        msg = None
+        
+        self.render('study.html',msg=msg,current_point = self.kv.get('study/point'))
+    def post(self):
+        h,m,s = map(lambda x : int(x),self.get_argument("time").split(':'))
+        score = (h*60+m)/10 
+        new_point = self.kv.get('study/point')+score
+        self.kv.set('study/point',new_point)
+        self.render('study.html',msg=score,current_point=new_point)
+        
+        
+        
+        
