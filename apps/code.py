@@ -15,7 +15,7 @@ import sae.kvdb
 md = markdown.Markdown(safe_mode=True)
 
 sae.kvdb.Client().add('count_for_msg', [0,0])  # current count and index
-#sae.kvdb.Client().add('count_for_spider', [0,0])  # count,index
+sae.kvdb.Client().add('count_for_spider', [0,0])  # count,index
 
 class BaseHandler(tornado.web.RequestHandler):
 
@@ -87,6 +87,5 @@ class ComposeHandler(BaseHandler):
 class debug(BaseHandler):
     def get(self):
         ls=[]
-        en=self.kv.get_by_prefix('msg_', limit=8, marker=0)
-        ls.append(next(en))
-        self.write(ls)
+        self.kv.set('study/point',0)
+        self.write('done')
